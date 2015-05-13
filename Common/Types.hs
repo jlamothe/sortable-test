@@ -21,7 +21,7 @@ module Common.Types where
 import Data.Time.Calendar (Day)
 
 data InputData =
-  InputData { fields       :: [String]
+  InputData { inputFields  :: [String]
             , inputRecords :: [InputRecord]
             } deriving (Eq, Show)
 

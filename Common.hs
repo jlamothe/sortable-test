@@ -19,7 +19,11 @@
 module Common (decode, build) where
 
 import Common.Types
-import Text.CSV (CSV, parseCSV)
+import Data.List.Split (splitOn)
+import Data.Maybe (fromMaybe, mapMaybe)
+import Data.Time.Calendar (Day, fromGregorian)
+import Safe (readMay)
+import Text.CSV (CSV, Record, parseCSV)
 
 decode :: String -> InputData
 decode rawInput = case parseCSV "" rawInput of
@@ -27,12 +31,36 @@ decode rawInput = case parseCSV "" rawInput of
   _         -> emptyInputData
 
 build :: CSV -> InputData
-build csv = emptyInputData { fields = getFields csv }
+build csv = emptyInputData { inputFields = getFields csv
+                           , inputRecords = getRecords csv
+                           }
 
 getFields :: CSV -> [String]
 getFields (record : _) = case record of
   (_ : _ : xs) -> xs
   _            -> []
 getFields _ = []
+
+getRecords :: CSV -> [InputRecord]
+getRecords (_ : records) = mapMaybe toRecord records
+getRecords _             = []
+
+toRecord :: Record -> Maybe InputRecord
+toRecord (dateString : order : xs) = do
+  date <- decodeDate dateString
+  Just $ InputRecord date order $ map toVal xs
+toRecord _ = Nothing
+
+decodeDate :: String -> Maybe Day
+decodeDate str = case splitOn "/" str of
+  [mStr, dStr, yStr] -> do
+    month <- readMay mStr :: Maybe Int
+    day   <- readMay dStr :: Maybe Int
+    year  <- readMay yStr :: Maybe Integer
+    Just $ fromGregorian year month day
+  _ -> Nothing
+
+toVal :: String -> Double
+toVal str = fromMaybe 0 $ readMay str
 
 -- jl
