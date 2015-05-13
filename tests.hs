@@ -18,17 +18,18 @@
 
 module Main (main) where
 
+import qualified Common.Tests as Common
 import System.Exit (exitSuccess, exitFailure)
 import Test.HUnit ( Test (..)
                   , Counts (..)
                   , runTestTT
-                  , (@=?)
                   )
 
 main :: IO ()
 main = runTestTT tests >>= processCounts
 
-tests = TestList []
+tests :: Test
+tests = TestList [Common.buildTests]
 
 processCounts :: Counts -> IO ()
 processCounts counts =

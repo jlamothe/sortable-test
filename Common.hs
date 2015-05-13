@@ -27,6 +27,12 @@ decode rawInput = case parseCSV "" rawInput of
   _         -> emptyInputData
 
 build :: CSV -> InputData
-build = undefined
+build csv = emptyInputData { fields = getFields csv }
+
+getFields :: CSV -> [String]
+getFields (record : _) = case record of
+  (_ : _ : xs) -> xs
+  _            -> []
+getFields _ = []
 
 -- jl
