@@ -5,7 +5,7 @@ name:                sortable-test
 version:             0.0.1
 synopsis:            Test from Sortable
 -- description:         
-homepage:            https://github.com/jlamothe/sortable-test.git
+homepage:            https://github.com/jlamothe/sortable-test
 license:             GPL-3
 license-file:        LICENSE
 author:              Jonathan Lamothe
