@@ -29,9 +29,9 @@ emptyInputData :: InputData
 emptyInputData = InputData [] []
 
 data InputRecord =
-  InputRecord { inputRecordDate  :: Day
-              , inputRecordOrder :: String
-              , values           :: [Double]
+  InputRecord { inputRecordDate   :: Day
+              , inputRecordOrder  :: String
+              , inputRecordValues :: [Double]
               } deriving (Eq, Show)
 
 -- jl
