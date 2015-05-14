@@ -16,19 +16,37 @@
 -- along with this program.  If not, see
 -- <http://www.gnu.org/licenses/>.
 
-module Daily (dailySummary) where
+module Daily (dailySummary, process) where
 
 import Common
 import Common.Types
 import Daily.Types
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.Time.Calendar (Day)
 
 dailySummary :: String -> String
 dailySummary rawInput = encode $ process $ decode rawInput
 
+process :: InputData -> ProcessedData
+process input =
+  Map.map (buildRecord $ inputFields input) $ sortByDate $ inputRecords input
+
 encode :: ProcessedData -> String
 encode = undefined
 
-process :: InputData -> ProcessedData
-process = undefined
+buildRecord :: [String] -> [InputRecord] -> ProcessedRecord
+buildRecord fields =
+  Map.fromList . zip fields . buildColumns
+
+sortByDate :: [InputRecord] -> Map Day [InputRecord]
+sortByDate = foldr addToMap Map.empty
+
+addToMap :: InputRecord -> Map Day [InputRecord] -> Map Day [InputRecord]
+addToMap x s = Map.insert day (x : Map.findWithDefault [] day s) s
+  where day = inputRecordDate x
+
+buildColumns :: [InputRecord] -> [ProcessedColumn]
+buildColumns = undefined
 
 -- jl

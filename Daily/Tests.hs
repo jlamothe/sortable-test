@@ -16,21 +16,13 @@
 -- along with this program.  If not, see
 -- <http://www.gnu.org/licenses/>.
 
-module Daily.Types where
+module Daily.Tests (processTests) where
 
-import Data.Map (Map)
-import Data.Time.Calendar (Day)
+import qualified Daily.Tests.Process as Process
+import Test.HUnit (Test (..))
 
-type ProcessedData = Map Day ProcessedRecord
-
-type ProcessedRecord = Map String ProcessedColumn
-
-data ProcessedColumn =
-  ProcessedColumn { colSum    :: Double
-                  , colMax    :: Double
-                  , colMin    :: Double
-                  , colAvg    :: Double
-                  , colStdDev :: Double
-                  } deriving (Eq, Show)
+processTests :: Test
+processTests = TestLabel "Daily.process" $
+  TestList [Process.recordCountTest]
 
 -- jl

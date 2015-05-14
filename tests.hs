@@ -19,6 +19,7 @@
 module Main (main) where
 
 import qualified Common.Tests as Common
+import qualified Daily.Tests as Daily
 import System.Exit (exitSuccess, exitFailure)
 import Test.HUnit ( Test (..)
                   , Counts (..)
@@ -29,7 +30,9 @@ main :: IO ()
 main = runTestTT tests >>= processCounts
 
 tests :: Test
-tests = TestList [Common.buildTests]
+tests = TestList [ Common.buildTests
+                 , Daily.processTests
+                 ]
 
 processCounts :: Counts -> IO ()
 processCounts counts =
