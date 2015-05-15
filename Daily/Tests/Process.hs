@@ -16,7 +16,7 @@
 -- along with this program.  If not, see
 -- <http://www.gnu.org/licenses/>.
 
-module Daily.Tests.Process (recordCountTest) where
+module Daily.Tests.Process (tests) where
 
 import Common.Types
 import Daily (process)
@@ -25,9 +25,26 @@ import qualified Data.Map as Map
 import Data.Time.Calendar (Day, fromGregorian)
 import Test.HUnit (Test (..), (@=?))
 
+tests :: Test
+tests = TestLabel "Daily.process tests" $
+  TestList [ recordCountTest
+           , valueCountTests
+           ]
+
 recordCountTest :: Test
 recordCountTest = TestLabel "record count" $
-  TestCase $ Map.size expected @=? Map.size actual
+  TestCase $ Map.size (processedRecords expected)
+  @=? Map.size (processedRecords actual)
+
+valueCountTests :: Test
+valueCountTests = TestLabel "value counts" $
+  TestList $ map valueCountTest (Map.toList actualRecords)
+  where actualRecords = processedRecords actual
+
+valueCountTest :: (Day, ProcessedRecord) -> Test
+valueCountTest (day, record) =
+  TestLabel ("for day " ++ show day) $
+  TestCase $ length fields @=? length record
 
 input :: InputData
 input =
@@ -46,7 +63,7 @@ records = [ InputRecord day1 "foo" [1, 2, 3]
           ]
 
 expected :: ProcessedData
-expected =
+expected = ProcessedData fields $
   Map.fromList [ (day1, day1record)
                , (day2, day2record)
                ]
@@ -61,40 +78,32 @@ day2 :: Day
 day2 = fromGregorian 1970 1 2
 
 day1record :: ProcessedRecord
-day1record =
-  Map.fromList [ ("foo", day1foo)
-               , ("bar", day1bar)
-               , ("baz", day1baz)
-               ]
+day1record = [day1foo, day1bar, day1baz]
 
 day2record :: ProcessedRecord
-day2record =
-  Map.fromList [ ("foo", day2foo)
-               , ("bar", day2bar)
-               , ("baz", day2baz)
-               ]
+day2record = [day2foo, day2bar, day2baz]
 
-day1foo :: ProcessedColumn
+day1foo :: ProcessedValues
 day1foo = processedColumn 1 4
 
-day1bar :: ProcessedColumn
+day1bar :: ProcessedValues
 day1bar = processedColumn 2 5
 
-day1baz :: ProcessedColumn
+day1baz :: ProcessedValues
 day1baz = processedColumn 3 6
 
-day2foo :: ProcessedColumn
+day2foo :: ProcessedValues
 day2foo = processedColumn 6 3
 
-day2bar :: ProcessedColumn
+day2bar :: ProcessedValues
 day2bar = processedColumn 5 2
 
-day2baz :: ProcessedColumn
+day2baz :: ProcessedValues
 day2baz = processedColumn 4 1
 
-processedColumn :: Double -> Double -> ProcessedColumn
+processedColumn :: Double -> Double -> ProcessedValues
 processedColumn x y =
-  ProcessedColumn (x + y) (max x y) (min x y) (avg x y) (stdDev x y)
+  ProcessedValues (x + y) (max x y) (min x y) (avg x y) (stdDev x y)
 
 avg :: Double -> Double -> Double
 avg x y = x + y / 2

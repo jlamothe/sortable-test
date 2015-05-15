@@ -21,12 +21,15 @@ module Daily.Types where
 import Data.Map (Map)
 import Data.Time.Calendar (Day)
 
-type ProcessedData = Map Day ProcessedRecord
+data ProcessedData =
+  ProcessedData { processedFields  :: [String]
+                , processedRecords :: Map Day ProcessedRecord
+                } deriving (Eq, Show)
 
-type ProcessedRecord = Map String ProcessedColumn
+type ProcessedRecord = [ProcessedValues]
 
-data ProcessedColumn =
-  ProcessedColumn { colSum    :: Double
+data ProcessedValues =
+  ProcessedValues { colSum    :: Double
                   , colMax    :: Double
                   , colMin    :: Double
                   , colAvg    :: Double

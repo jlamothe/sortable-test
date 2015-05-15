@@ -16,13 +16,13 @@
 -- along with this program.  If not, see
 -- <http://www.gnu.org/licenses/>.
 
-module Daily.Tests (processTests) where
+module Daily.Tests (tests) where
 
 import qualified Daily.Tests.Process as Process
 import Test.HUnit (Test (..))
 
-processTests :: Test
-processTests = TestLabel "Daily.process" $
-  TestList [Process.recordCountTest]
+tests :: Test
+tests = TestLabel "Daily tests" $
+  TestList [Process.tests]
 
 -- jl

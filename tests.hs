@@ -31,7 +31,7 @@ main = runTestTT tests >>= processCounts
 
 tests :: Test
 tests = TestList [ Common.buildTests
-                 , Daily.processTests
+                 , Daily.tests
                  ]
 
 processCounts :: Counts -> IO ()
