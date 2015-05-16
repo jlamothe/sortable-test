@@ -28,6 +28,7 @@ import Test.HUnit (Test (..), (@=?))
 tests :: Test
 tests = TestLabel "Daily.process tests" $
   TestList [ recordCountTest
+           , fieldTest
            , valueCountTests
            ]
 
@@ -35,6 +36,10 @@ recordCountTest :: Test
 recordCountTest = TestLabel "record count" $
   TestCase $ Map.size (processedRecords expected)
   @=? Map.size (processedRecords actual)
+
+fieldTest :: Test
+fieldTest = TestLabel "field count" $
+  TestCase $ fields @=? processedFields actual
 
 valueCountTests :: Test
 valueCountTests = TestLabel "value counts" $
