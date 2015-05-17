@@ -26,14 +26,14 @@ data ProcessedData =
                 , processedRecords :: Map Day ProcessedRecord
                 } deriving (Eq, Show)
 
-type ProcessedRecord = [ProcessedValues]
+type ProcessedRecord = [Stats]
 
-data ProcessedValues =
-  ProcessedValues { colSum    :: Double
-                  , colMax    :: Double
-                  , colMin    :: Double
-                  , colAvg    :: Double
-                  , colStdDev :: Double
-                  } deriving (Eq, Show)
+data Stats =
+  Stats { statSum    :: Double
+        , statMax    :: Double
+        , statMin    :: Double
+        , statAvg    :: Double
+        , statStdDev :: Double
+        } deriving (Eq, Show)
 
 -- jl

@@ -37,10 +37,28 @@ encode :: ProcessedData -> String
 encode = undefined
 
 buildRecord :: [InputRecord] -> ProcessedRecord
-buildRecord = map buildValues . transpose . map inputRecordValues
+buildRecord = map buildStats . transpose . map inputRecordValues
 
-buildValues :: [Double] -> ProcessedValues
-buildValues = undefined
+buildStats :: [Double] -> Stats
+buildStats xs =
+  Stats { statSum = sum xs
+        , statMax = max' xs
+        , statMin = min' xs
+        , statAvg = avg xs
+        , statStdDev = stdDev xs
+        }
+
+max' :: [Double] -> Double
+max' (x : xs) = foldl max x xs
+
+min' :: [Double] -> Double
+min' (x : xs) = foldl min x xs
+
+avg :: [Double] -> Double
+avg xs = sum xs / (fromIntegral . length) xs
+
+stdDev :: [Double] -> Double
+stdDev xs = sqrt (sum $ map (\x -> (x - avg xs) ^ 2) xs) / (fromIntegral . length) xs
 
 sortByDate :: [InputRecord] -> Map Day [InputRecord]
 sortByDate = foldr addToMap Map.empty
