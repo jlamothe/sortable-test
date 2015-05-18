@@ -18,11 +18,20 @@
 
 module Daily.Tests (tests) where
 
+import Daily
 import qualified Daily.Tests.Process as Process
-import Test.HUnit (Test (..))
+import qualified Daily.Tests.Encode as Encode
+import Test.HUnit (Test (..), (@=?))
 
 tests :: Test
 tests = TestLabel "Daily tests" $
-  TestList [Process.tests]
+  TestList [ Process.tests
+           , headersForTest
+           , Encode.test
+           ]
+
+headersForTest :: Test
+headersForTest = TestLabel "Daily.headersFor" $
+  TestCase $ ["Total foo", "Max foo", "Min foo", "Avg foo", "foo Std Dev"] @=? headersFor "foo"
 
 -- jl
