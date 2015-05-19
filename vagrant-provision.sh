@@ -3,4 +3,5 @@
 apt-get update
 apt-get install -qy cabal-install hlint
 
-sudo -u vagrant bash --login cabal update
+export HOME=/home/vagrant
+sudo -u vagrant bash --login /vagrant/cabal-setup.sh
